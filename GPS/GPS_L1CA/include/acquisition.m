@@ -56,7 +56,6 @@ samplesPerCode = round(settings.samplingFreq / ...
 % Find number of samples per coherent integration
 samplesPerCoh = cohSum*samplesPerCode;
 
-
 % Create matrix of data for the non coherent integration. 2 times the
 % number of non coherent sum is needed to avoid bit transition
 Signal = zeros(2*nonCohSum,samplesPerCoh);
