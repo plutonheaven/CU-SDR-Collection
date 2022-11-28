@@ -41,10 +41,10 @@ function settings = initSettings()
 %% Processing settings ====================================================
 % Number of milliseconds to be processed used 36000 + any transients (see
 % below - in Nav parameters) to ensure nav subframes are provided
-settings.msToProcess        = 37000;        %[ms]
+settings.msToProcess        = 40000;        %[ms]
 
 % Number of channels to be used for signal processing
-settings.numberOfChannels   = 12;
+settings.numberOfChannels   = 11;
 
 % Move the starting point of processing. Can be used to start the signal
 % processing at any point in the data record (e.g. for long records). fseek
@@ -55,9 +55,9 @@ settings.skipNumberOfBytes     = 0;
 %% Raw signal file name and other parameter ===============================
 % This is a "default" name of the data file (signal record) to be used in
 % the post-processing mode
-settings.fileName           = '../../../dataSets/L1_IF20KHz_FS18MHz.bin';
+settings.fileName           = 'L1_1ch_4M_openSky.dat';%'L1_1ch_4M_openSky.dat';'L1_1ch_4M_lightIndoor.dat';'L1_1ch_4M_deepIndoor.dat';
 % Data type used to store one sample
-settings.dataType           = 'schar';  
+settings.dataType           = 'float';  
 
 % File Types
 %1 - 8 bit real samples S0,S1,S2,...
@@ -65,8 +65,8 @@ settings.dataType           = 'schar';
 settings.fileType           = 2;
 
 % Intermediate, sampling and code frequencies
-settings.IF                 = 20e3;     % [Hz]
-settings.samplingFreq       = 18e6;        % [Hz]
+settings.IF                 = 0;%20e3;     % [Hz]
+settings.samplingFreq       = 4e6;        % [Hz]
 settings.codeFreqBasis      = 1.023e6;     % [Hz]
 
 % Define number of chips in a code period
@@ -77,21 +77,16 @@ settings.codeLength         = 1023.;
 settings.skipAcquisition    = 0;
 % List of satellites to look for. Some satellites can be excluded to speed
 % up acquisition
-settings.acqSatelliteList   = 1:32;         %[PRN numbers]
-% Band around IF to search for satellite signal. Depends on max Doppler.
-% It is single sideband, so the whole search band is tiwce of it.
-settings.acqSearchBand      = 7000;           %[Hz]
+settings.acqSatelliteList   = 1:32;          %[PRN numbers]
+% List of frequency bins to search for 
+settings.freqBinList =  -10e3:500:10e3;
+% No. of code periods for coherent integration (less than 11ms)
+settings.acqCohTime         = 1;             %[ms]
 % Non-coherent integration times after 1ms coherent integration
-settings.acqNonCohTime      = 20;                %[ms]
+settings.acqNonCohTime      = 1;                
 % Threshold for the signal presence decision rule
-settings.acqThreshold       = 3.5;
-% Frequency search step for coarse acquisition
-settings.acqSearchStep      = 500;               % [Hz]
-% Sampling rate threshold for downsampling 
-settings.resamplingThreshold    = 8e6;            % [Hz]
-% Enable/dissable use of downsampling for acquisition
-settings.resamplingflag         = 0;              % 0 - Off
-                                                  % 1 - On
+settings.acqThreshold       = 1.5;
+
 %% Tracking loops settings ================================================
 % Code tracking loop parameters
 settings.dllDampingRatio         = 0.7;

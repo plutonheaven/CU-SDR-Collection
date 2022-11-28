@@ -1,4 +1,3 @@
-
 %--------------------------------------------------------------------------
 %                         CU Multi-GNSS SDR  
 % (C) Updated by Yafeng Li, Nagaraj C. Shivaramaiah and Dennis M. Akos
@@ -30,7 +29,8 @@
 % $Id: init.m,v 1.14.2.21 2006/08/22 13:46:00 dpl Exp $
 
 %% Clean up the environment first =========================================
-% clear all; close all; clc;
+clear all; close all; clc;
+tic
 
 format ('compact');
 format ('long', 'g');
@@ -38,27 +38,26 @@ format ('long', 'g');
 %--- Include folders with functions ---------------------------------------
 addpath include               % The software receiver functions
 addpath Common                % Common functions between differnt SDR receivers
-% addpath ('../IF_Data_Set')    % IF data sets for each SDR receivers
 
 %% Print startup ==========================================================
-% fprintf(['\n',...
-%     'Welcome to:  softGNSS\n\n', ...
-%     'An open source GNSS SDR software project initiated by:\n\n', ...
-%     '              Danish GPS Center/Aalborg University\n\n', ...
-%     'The code was improved by GNSS Laboratory/University of Colorado.\n\n',...
-%     'The software receiver softGNSS comes with ABSOLUTELY NO WARRANTY;\n',...
-%     'for details please read license details in the file license.txt. This\n',...
-%     'is free software, and  you  are  welcome  to  redistribute  it under\n',...
-%     'the terms described in the license.\n\n']);
-% fprintf('                   -------------------------------\n\n');
+fprintf(['\n',...
+    'Welcome to:  softGNSS\n\n', ...
+    'An open source GNSS SDR software project initiated by:\n\n', ...
+    '              Danish GPS Center/Aalborg University\n\n', ...
+    'The code was improved by GNSS Laboratory/University of Colorado.\n\n',...
+    'The software receiver softGNSS comes with ABSOLUTELY NO WARRANTY;\n',...
+    'for details please read license details in the file license.txt. This\n',...
+    'is free software, and  you  are  welcome  to  redistribute  it under\n',...
+    'the terms described in the license.\n\n']);
+fprintf('                   -------------------------------\n\n');
 
 %% Initialize constants, settings =========================================
 settings = initSettings();
 
 %% Generate plot of raw data and ask if ready to start processing =========
 try
-    fprintf('Probing data (%s)...\n', settings.fileName)
-    probeData(settings);
+%     fprintf('Probing data (%s)...\n', settings.fileName)
+%     probeData(settings);
 catch
     % There was an error, print it and exit
     errStruct = lasterror;
@@ -67,13 +66,17 @@ catch
     return;
 end
     
-disp('  Raw IF data plotted ')
-disp('  (run setSettings or change settings in "initSettings.m" to reconfigure)')
-disp(' ');
-gnssStart = input('Enter "1" to initiate GNSS processing or "0" to exit : ');
+% disp('  Raw IF data plotted ')
+% disp('  (run setSettings or change settings in "initSettings.m" to reconfigure)')
+% disp(' ');
+% gnssStart = input('Enter "1" to initiate GNSS processing or "0" to exit : ');
+gnssStart = 1;
 
 if (gnssStart == 1)
-    disp(' ');
-    % start things rolling...
+%     disp(' start things rolling...');
+    disp(['File:                                  ' settings.fileName]);
+    disp(['Acquisition - Nb of Coherent Sums:     ' num2str(settings.acqCohTime)]);
+    disp(['Acquisition - Nb of Non-Coherent Sums: ' num2str(settings.acqNonCohTime)]);
     postProcessing
 end
+toc
