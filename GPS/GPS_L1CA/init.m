@@ -29,7 +29,7 @@
 % $Id: init.m,v 1.14.2.21 2006/08/22 13:46:00 dpl Exp $
 
 %% Clean up the environment first =========================================
-clear all; close all; clc;
+clear all; %close all; clc;
 tic
 
 format ('compact');

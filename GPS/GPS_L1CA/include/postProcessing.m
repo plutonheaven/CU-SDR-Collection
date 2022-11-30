@@ -99,8 +99,6 @@ if (fid > 0)
         %--- Do the acquisition -------------------------------------------
         disp ('   Acquiring satellites...');
         acqResults = acquisition(data, settings);
-
-        plotAcquisition(acqResults);
     end
 
 %% Initialize channels and prepare for the run ============================
@@ -125,8 +123,8 @@ if (fid > 0)
 % % Process all channels for given data block
 % [trkResults, ~] = tracking(fid, channel, settings);
 % save("trkResults")
-% % Close the data file
-% fclose(fid);
+% Close the data file
+fclose(fid);
 % disp(['   Tracking is over (elapsed time ', ...
 %                                     datestr(now - startTime, 13), ')'])                      
 % 
@@ -143,6 +141,7 @@ disp ('   Ploting results...');
 
 if settings.plotAcquisition
     plotAcquisition(acqResults);
+    plotAcquisitionMat(acqResults,settings,settings.acqSatelliteList);
 end
 
 % if settings.plotTracking

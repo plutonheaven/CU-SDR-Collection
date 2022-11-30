@@ -84,6 +84,8 @@ acqResults.codePhase    = zeros(1, 32);
 acqResults.peakMetric   = zeros(1, 32);
 % Number of frequency bin searched to obtain above threshold peak
 acqResults.freqBin      = zeros(1, 32);
+% acquisition matrix
+acqResults.acqMat       = zeros(32,length(freqBinList),samplesPerCoh);
 
 fprintf('(');
 
@@ -178,6 +180,7 @@ for PRN = settings.acqSatelliteList
 
     %--- Store result -----------------------------------------------------
     acqResults.peakMetric(PRN) = peakSize/secondPeakSize;
+    acqResults.acqMat(PRN,:,:) = results;
     
     % If the result is above threshold, then there is a signal ...
     if (peakSize/secondPeakSize) > settings.acqThreshold
@@ -189,8 +192,7 @@ for PRN = settings.acqSatelliteList
         %--- Save acquisition results
         acqResults.codePhase(PRN) = mod(codePhase,samplesPerCode);
         acqResults.carrFreq(PRN) = settings.IF +  freqBinList(frequencyBinIndex);
-        acqResults.freqBin(PRN) = frequencyBinIndex;
-        
+        acqResults.freqBin(PRN) = frequencyBinIndex;        
     else
         %--- No signal with this PRN --------------------------------------
         fprintf('. ');

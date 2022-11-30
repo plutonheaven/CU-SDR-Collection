@@ -7,9 +7,9 @@ tic
 
 % simulated signal characteristics
 prn = 1; % between 1 and 32
-delay_true_chips = 0; % in chips, between 0 and 1022
+delay_true_chips = 511; % in chips, between 0 and 1022
 doppler_true_Hz = 1500; % in Hz, typ. between +/- 7 kHz
-signal_power_dBm = -140;-128.5; % in dBm. Typical open sky power is -128.5 dBm
+signal_power_dBm = -140;-130; % in dBm. Typical open sky power is -128.5 dBm
 
 % read settings (mainly to define GPS L1C/A parameters
 settings = initSettings();
@@ -28,10 +28,8 @@ codePeriodSign = kron(bits,ones(1,20));
 delay_true_samples = round(delay_true_chips/settings.codeFreqBasis*settings.samplingFreq); % in samples
 % compute SNR and noise power
 noise_psd = -203.9; % dBW/Hz. Typical value for RF front-end with integrated LNA
-bw_Hz = 4e6;
-noise_power_dBm = noise_psd + 10*log10(bw_Hz) + 30; % dBm
-snr_dB = signal_power_dBm - noise_power_dBm;
-std_noise = 10^(-snr_dB/20); % actually 10^(-snr_dB/20)*var(prnCode_1ms), but var(prnCode_1ms) = 1
+CN0_dB = signal_power_dBm - 30 - noise_psd;
+noise_power = 10^(-CN0_dB/10)*settings.samplingFreq;
 % sampling frequency
 ts = 1 / settings.samplingFreq;
 % number of samples in one code period (1 ms)
@@ -39,7 +37,7 @@ N_1ms = 1e-3*settings.samplingFreq; % number of samples in 1 ms
 % number of code periods
 Nperiod = settings.msToProcess/1e3/(settings.codeLength/settings.codeFreqBasis);
 % filename
-filename = ['simulatedSignal_tau=' num2str(delay_true_chips/settings.codeFreqBasis*1e6) 'µs_' ...
+filename = ['simulatedSignal_tau=' num2str(delay_true_chips) 'Tc_' ...
             'dop=' num2str(doppler_true_Hz) 'Hz_' ...
             'pow=' num2str(signal_power_dBm) 'dBm' ...
             '.bin'];
@@ -65,7 +63,7 @@ for indPeriod = 1:Nperiod
     phi0 = phi0 + N_1ms*doppler_true_Hz/settings.samplingFreq;
     
     % add noise
-    noise = std_noise*(randn(1,N_1ms)+1j*randn(1,N_1ms));
+    noise = sqrt(noise_power/2)*(randn(1,N_1ms)+1j*randn(1,N_1ms));
     prnCode_noise = prnCode_doppler + noise;
     
     % write signal to file (appends value to fid)
