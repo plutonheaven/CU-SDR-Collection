@@ -31,7 +31,9 @@ for indPrn = 1:length(prn_v)
     % accross all delays except +/- 1 chip around peak
     noise_height = mean(results(frequencyBinIndex,setdiff((1:NsamplesPerCodePeriod),delayBinIndex + (-round(Fs/Fc):round(Fs/Fc)))));
     SNR_dB = 10*log10( peak_height / noise_height);
-    fprintf("PRN %02i - estimated SNR = %2.1f dB\n",prn_v(indPrn),SNR_dB)
+    fprintf("PRN %02i - estimated SNR = %2.1f dB",prn_v(indPrn),SNR_dB)
+    if acqResults.peakMetric(indPrn) < settings.acqThreshold, fprintf(" (sat not acquired)"); end
+    fprintf("\n")
     
     figure(101+indPrn);
     surf(delay_v,settings.freqBinList/1e3,results);

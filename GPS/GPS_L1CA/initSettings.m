@@ -55,7 +55,7 @@ settings.skipNumberOfBytes     = 0;
 %% Raw signal file name and other parameter ===============================
 % This is a "default" name of the data file (signal record) to be used in
 % the post-processing mode
-settings.fileName           = 'simulatedSignal_tau=511Tc_dop=1500Hz_pow=-140dBm.bin';%'L1_1ch_4M_openSky.dat';%'L1_1ch_4M_openSky.dat';'L1_1ch_4M_lightIndoor.dat';'L1_1ch_4M_deepIndoor.dat';
+settings.fileName           = 'simulatedSignal_tau=511Tc_dop=1500Hz_pow=-160dBm.bin';%'L1_1ch_4M_openSky.dat';%'L1_1ch_4M_openSky.dat';'L1_1ch_4M_lightIndoor.dat';'L1_1ch_4M_deepIndoor.dat';
 % Data type used to store one sample
 settings.dataType           = 'float';  
 
@@ -81,7 +81,7 @@ settings.acqSatelliteList   = 1:2;1:32;          %[PRN numbers]
 % List of frequency bins to search for 
 settings.freqBinList =  -10e3:500:10e3;
 % No. of code periods for coherent integration (less than 11ms)
-settings.acqCohTime         = 11;             %[ms]
+settings.acqCohTime         = 1;             %[ms]
 % Non-coherent integration times after 1ms coherent integration
 settings.acqNonCohTime      = 1;                
 % Threshold for the signal presence decision rule

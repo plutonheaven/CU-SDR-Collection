@@ -9,7 +9,7 @@ tic
 prn = 1; % between 1 and 32
 delay_true_chips = 511; % in chips, between 0 and 1022
 doppler_true_Hz = 1500; % in Hz, typ. between +/- 7 kHz
-signal_power_dBm = -140;-130; % in dBm. Typical open sky power is -128.5 dBm
+signal_power_dBm = -160;-140;-130; % in dBm. Typical open sky power is -128.5 dBm
 
 % read settings (mainly to define GPS L1C/A parameters
 settings = initSettings();

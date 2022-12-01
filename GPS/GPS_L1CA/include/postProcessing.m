@@ -113,7 +113,7 @@ if (fid > 0)
         disp('No GNSS signals detected, signal processing finished.');
         trackResults = [];
         navSolutions = [];
-        return;
+%         return;
     end
 
 %%% Track the signal =======================================================
