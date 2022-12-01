@@ -9,7 +9,7 @@ tic
 prn = 1; % between 1 and 32
 delay_true_chips = 511; % in chips, between 0 and 1022
 doppler_true_Hz = 1500; % in Hz, typ. between +/- 7 kHz
-signal_power_dBm = -160;-140;-130; % in dBm. Typical open sky power is -128.5 dBm
+signal_power_dBm = -130;-140;-160; % in dBm. Typical open sky power is -128.5 dBm
 
 % read settings (mainly to define GPS L1C/A parameters
 settings = initSettings();
@@ -59,13 +59,17 @@ for indPeriod = 1:Nperiod
     prnCode_delay = circshift(prnCode_1ms,delay_true_samples);
     
     % introduce doppler
-    prnCode_doppler = prnCode_delay.*exp(1j*2*pi*(doppler_true_Hz*(0:N_1ms-1)/settings.samplingFreq)+phi0);
+    prnCode_doppler = prnCode_delay.*exp(1j*2*pi*(doppler_true_Hz*(0:N_1ms-1)/settings.samplingFreq+phi0));
     phi0 = phi0 + N_1ms*doppler_true_Hz/settings.samplingFreq;
     
     % add noise
     noise = sqrt(noise_power/2)*(randn(1,N_1ms)+1j*randn(1,N_1ms));
     prnCode_noise = prnCode_doppler + noise;
-    
+
+%     % (DEBUG ONLY) Plot signal
+%     figure(1); hold all;
+%     plot((0:N_1ms-1) + (indPeriod-1)*N_1ms, real(prnCode_noise));
+
     % write signal to file (appends value to fid)
     saveSamplesToFile(fid,prnCode_noise,settings.fileType,settings.dataType);
 end; clear indPeriod

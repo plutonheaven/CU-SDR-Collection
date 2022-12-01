@@ -41,7 +41,7 @@ function settings = initSettings()
 %% Processing settings ====================================================
 % Number of milliseconds to be processed used 36000 + any transients (see
 % below - in Nav parameters) to ensure nav subframes are provided
-settings.msToProcess        = 40000;        %[ms]
+settings.msToProcess        = 500;        %[ms]
 
 % Number of channels to be used for signal processing
 settings.numberOfChannels   = 11;
@@ -55,9 +55,9 @@ settings.skipNumberOfBytes     = 0;
 %% Raw signal file name and other parameter ===============================
 % This is a "default" name of the data file (signal record) to be used in
 % the post-processing mode
-settings.fileName           = 'simulatedSignal_tau=511Tc_dop=1500Hz_pow=-160dBm.bin';%'L1_1ch_4M_openSky.dat';%'L1_1ch_4M_openSky.dat';'L1_1ch_4M_lightIndoor.dat';'L1_1ch_4M_deepIndoor.dat';
+settings.fileName           = 'simulatedSignal_tau=511Tc_dop=1500Hz_pow=-130dBm.bin';%'L1_1ch_4M_openSky.dat';%'L1_1ch_4M_openSky.dat';'L1_1ch_4M_lightIndoor.dat';'L1_1ch_4M_deepIndoor.dat';
 % Data type used to store one sample
-settings.dataType           = 'float';  
+settings.dataType           = 'float';
 
 % File Types
 %1 - 8 bit real samples S0,S1,S2,...
