@@ -85,7 +85,7 @@ acqResults.peakMetric   = zeros(1, 32);
 % Number of frequency bin searched to obtain above threshold peak
 acqResults.freqBin      = zeros(1, 32);
 % acquisition matrix
-acqResults.acqMat       = zeros(32,length(freqBinList),samplesPerCoh);
+acqResults.acqMat       = zeros(32,length(freqBinList),samplesPerCode);
 
 fprintf('(');
 
@@ -151,10 +151,10 @@ for PRN = settings.acqSatelliteList
     % The second peak is chosen not closer than 1 chip to the highest peak
     
     %--- Find the correlation peak and the carrier frequency --------------
-    [~, frequencyBinIndex] = max(max(results, [], 2));
+    [~, frequencyBinIndex] = max(max(results(:,1:samplesPerCode), [], 2));
 
     %--- Find code phase of the same correlation peak ---------------------
-    [peakSize, codePhase] = max(max(results));
+    [peakSize, codePhase] = max(max(results(:,1:samplesPerCode)));
 
     %--- Find 1 chip wide C/A code phase exclude range around the peak ----
     samplesPerCodeChip   = round(settings.samplingFreq / settings.codeFreqBasis);
@@ -166,7 +166,6 @@ for PRN = settings.acqSatelliteList
     if excludeRangeIndex1 < 1
         codePhaseRange = excludeRangeIndex2 : ...
                          (samplesPerCode + excludeRangeIndex1);
-                         
     elseif excludeRangeIndex2 >= samplesPerCode
         codePhaseRange = (excludeRangeIndex2 - samplesPerCode) : ...
                          excludeRangeIndex1;
@@ -180,7 +179,7 @@ for PRN = settings.acqSatelliteList
 
     %--- Store result -----------------------------------------------------
     acqResults.peakMetric(PRN) = peakSize/secondPeakSize;
-    acqResults.acqMat(PRN,:,:) = results;
+    acqResults.acqMat(PRN,:,:) = results(:,1:samplesPerCode);
     
     % If the result is above threshold, then there is a signal ...
     if (peakSize/secondPeakSize) > settings.acqThreshold

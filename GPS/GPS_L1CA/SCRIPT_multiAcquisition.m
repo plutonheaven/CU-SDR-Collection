@@ -28,12 +28,14 @@ settings = initSettings();
 samplesPerCode = round(settings.samplingFreq / ...
     (settings.codeFreqBasis / settings.codeLength));
 
-% At least 42ms of signal are needed for fine frequency estimation
-% % % codeLen = max(42,2*(settings.acqNonCohTime*settings.acqCohTime)+2);
-codeLen = 2*(settings.acqNonCohTime*settings.acqCohTime)+2;
+% Nb of ms to perform acquisition. Acq is performed on 2 consecutive slices
+% of signal, each of length settings.acqNonCohTime*settings.acqCohTime
+acqLen_ms = 2*(settings.acqNonCohTime*settings.acqCohTime)+2;
 
 % Number of possible acquisition based on the signal duration
-Nacq = 100; floor(settings.msToProcess / (settings.acqCohTime*settings.acqNonCohTime));
+Nacq = floor(settings.msToProcess / acqLen_ms);
+% limit Nacq to 100
+Nacq = min([100 Nacq]);
 
 %% Generate plot of raw data and ask if ready to start processing =========
 disp(['File: ' settings.fileName]);
@@ -50,16 +52,11 @@ end
 %If success, then process the data
 if (fid > 0)
     for indAcq = 1:Nacq;
-        
-% % %         % Move the starting point of processing. Can be used to start the
-% % %         % signal processing at any point in the data record (e.g. good for long
-% % %         % records or for signal processing in blocks).
-% % %         fseek(fid, dataAdaptCoeff*settings.skipNumberOfBytes, 'bof');
+       
         
         %% Acquisition ============================================================
         % Read data for acquisition.
-        data  = fread(fid, dataAdaptCoeff*codeLen*samplesPerCode, settings.dataType)';
-% % %         fprintf("%i bytes read from file...\n", ftell(fid))
+        data  = fread(fid, dataAdaptCoeff*acqLen_ms*samplesPerCode, settings.dataType)';
         
         if (dataAdaptCoeff==2)
             data1=data(1:2:end);
@@ -68,8 +65,8 @@ if (fid > 0)
         end
         
         %--- Do the acquisition -------------------------------------------
-        disp(['Acquisition #' num2str(indAcq,'%03i') ' - Nb of Coherent Sums: ' num2str(settings.acqCohTime) ' - Nb of Non-Coherent Sums: ' num2str(settings.acqNonCohTime)]);
-        acqResults(indAcq) = acquisition(data, settings);
+        disp(['Acquisition #' num2str(indAcq,'%03i') '/' num2str(Nacq,'%03i') ' - Nb of Coherent Sums: ' num2str(settings.acqCohTime) ' - Nb of Non-Coherent Sums: ' num2str(settings.acqNonCohTime)]);
+        acqResults(indAcq) = acquisition_EnacTP(data, settings);
 
     end
     
@@ -96,22 +93,31 @@ for indPrn = 1:length(settings.acqSatelliteList)
         % detection outcome (1 or 0)
         detection(indPrn,indAcq) = acqResults(indAcq).peakMetric(indPrn) > settings.acqThreshold;
         % peak height at true delay/doppler
-        peak_height(indPrn,indAcq)  = acqResults(indAcq).acqMat(indPrn,trueDop_idx,trueDelay_idx);
-        noise_height(indPrn,indAcq) = mean(acqResults(indAcq).acqMat(indPrn,trueDop_idx,delayIdxNoPeak));
+        try % work only for simulated signals
+            peak_height(indPrn,indAcq)  = acqResults(indAcq).acqMat(indPrn,trueDop_idx,trueDelay_idx);
+            noise_height(indPrn,indAcq) = mean(acqResults(indAcq).acqMat(indPrn,trueDop_idx,delayIdxNoPeak));
+        end
     end
-    % display detection performances
-    switch indPrn
-        case 1 % satellite present
-            fprintf("PRN %02i - Detection rate = %.2f\n",indPrn,sum(detection(indPrn,:))/Nacq)
-        case 2
-            fprintf("PRN %02i - False Alarm rate = %.2f\n",indPrn,sum(detection(indPrn,:))/Nacq)
-    end
+    % display detection rate
+    fprintf("PRN %02i - Detection rate = %.2f\n",indPrn,sum(detection(indPrn,:))/Nacq)
 end; clear indPrn indAcq
 
-% figure; plot(detection');
-% sum(detection,2)/Nacq;
-figure; plot(peak_height');
-figure; plot(noise_height');
+try % works only for simulated signals
+    fig = figure;
+    subplot(2,1,1); hold all;
+    plot(peak_height');
+    yline(mean(peak_height,2));
+    legend('PRN present','PRN absent');
+    ylabel('Peak height');
+    subplot(2,1,2); hold all;
+    plot(noise_height');
+    yline(mean(noise_height,2));
+    ylabel('Noise height');
+    xlabel('Acquisition index');
+catch
+    close(fig)
+end
+
 
 
 toc

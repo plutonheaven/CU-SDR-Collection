@@ -73,7 +73,6 @@ end
 gnssStart = 1;
 
 if (gnssStart == 1)
-%     disp(' start things rolling...');
     disp(['File:                                  ' settings.fileName]);
     disp(['Acquisition - Nb of Coherent Sums:     ' num2str(settings.acqCohTime)]);
     disp(['Acquisition - Nb of Non-Coherent Sums: ' num2str(settings.acqNonCohTime)]);

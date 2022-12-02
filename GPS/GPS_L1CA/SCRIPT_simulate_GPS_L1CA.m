@@ -9,18 +9,18 @@ tic
 prn = 1; % between 1 and 32
 delay_true_chips = 511; % in chips, between 0 and 1022
 doppler_true_Hz = 1500; % in Hz, typ. between +/- 7 kHz
-signal_power_dBm = -130;-140;-160; % in dBm. Typical open sky power is -128.5 dBm
+signal_power_dBm = -150;-140;-130;-160; % in dBm. Typical open sky power is -128.5 dBm
 
 % read settings (mainly to define GPS L1C/A parameters
 settings = initSettings();
     
 % change signal duration - max duration used in Practical Work is 2*11*11 = 242 ms.
-settings.msToProcess = 500;
+settings.msToProcess = 2000;
 
 % Number of Nav message bits
 Nbits = settings.msToProcess/20;
 % Draw random bits
-bits = sign(randn(1,25));
+bits = sign(randn(1,Nbits));
 % Determine sign of the correlation function for each code period
 codePeriodSign = kron(bits,ones(1,20));
 
