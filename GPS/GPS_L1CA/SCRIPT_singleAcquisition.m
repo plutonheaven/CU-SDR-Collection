@@ -22,7 +22,7 @@ addpath Common                % Common functions between differnt SDR receivers
 % fprintf('                   -------------------------------\n\n');
 
 %% Initialize constants, settings =========================================
-settings = initSettings();
+settings = initSettings_EnacTP();
 
 % Find number of samples per spreading code
 samplesPerCode = round(settings.samplingFreq / ...

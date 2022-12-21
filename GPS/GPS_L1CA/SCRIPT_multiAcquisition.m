@@ -22,7 +22,7 @@ addpath Common                % Common functions between differnt SDR receivers
 % fprintf('                   -------------------------------\n\n');
 
 %% Initialize constants, settings =========================================
-settings = initSettings();
+settings = initSettings_EnacTP();
 
 % Find number of samples per spreading code
 samplesPerCode = round(settings.samplingFreq / ...
@@ -88,19 +88,28 @@ trueDop_idx = find(settings.freqBinList == trueDop_hz);
 % delay index vector without main peak (for noise level computation)
 delayIdxNoPeak = setdiff((1:NsamplesPerCodePeriod),trueDelay_idx + (-round(Fs/Fc):round(Fs/Fc)));
 
+prn_v = settings.acqSatelliteList;
 for indPrn = 1:length(settings.acqSatelliteList)
+    currentPrn = prn_v(indPrn);
     for indAcq = 1:Nacq
         % detection outcome (1 or 0)
-        detection(indPrn,indAcq) = acqResults(indAcq).peakMetric(indPrn) > settings.acqThreshold;
+        detection(indPrn,indAcq) = acqResults(indAcq).peakMetric(currentPrn) > settings.acqThreshold;
         % peak height at true delay/doppler
         try % work only for simulated signals
-            peak_height(indPrn,indAcq)  = acqResults(indAcq).acqMat(indPrn,trueDop_idx,trueDelay_idx);
-            noise_height(indPrn,indAcq) = mean(acqResults(indAcq).acqMat(indPrn,trueDop_idx,delayIdxNoPeak));
+            peak_height(indPrn,indAcq)  = acqResults(indAcq).acqMat(currentPrn,trueDop_idx,trueDelay_idx);
+            noise_height(indPrn,indAcq) = mean(acqResults(indAcq).acqMat(currentPrn,trueDop_idx,delayIdxNoPeak));
         end
     end
     % display detection rate
-    fprintf("PRN %02i - Detection rate = %.2f\n",indPrn,sum(detection(indPrn,:))/Nacq)
+    fprintf("PRN %02i - Detection rate = %.2f\n",currentPrn,sum(detection(indPrn,:))/Nacq)
 end; clear indPrn indAcq
+
+figure;
+bar(settings.acqSatelliteList,sum(detection,2)/Nacq);
+xlabel('PRN')
+ylabel('Detection rate');
+title(settings.fileName);
+grid on
 
 try % works only for simulated signals
     fig = figure;

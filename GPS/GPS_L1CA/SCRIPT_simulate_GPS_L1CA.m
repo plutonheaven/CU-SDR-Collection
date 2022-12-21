@@ -14,8 +14,10 @@ signal_power_dBm = -150;-140;-130;-160; % in dBm. Typical open sky power is -128
 % read settings (mainly to define GPS L1C/A parameters
 settings = initSettings();
     
-% change signal duration - max duration used in Practical Work is 2*11*11 = 242 ms.
-settings.msToProcess = 2000;
+% change signal duration
+%   - max acquisition duration used in Practical Work is 2*11*11 = 242 ms.
+%   - we may want to do 20 of such acquisitions
+settings.msToProcess = 2500;
 
 % Number of Nav message bits
 Nbits = settings.msToProcess/20;
