@@ -29,9 +29,17 @@ for indPrn = 1:length(prn_v)
     [peak_height,delayBinIndex] = max(results(frequencyBinIndex,:));
     % mean height of the corr matrix, on the correct frequency bin, and
     % accross all delays except +/- 1 chip around peak
-    noise_height = mean(results(frequencyBinIndex,setdiff((1:NsamplesPerCodePeriod),delayBinIndex + (-round(Fs/Fc):round(Fs/Fc)))));
-    SNR_dB = 10*log10( peak_height / noise_height);
-    fprintf("PRN %02i - estimated SNR = %2.1f dB",prn_v(indPrn),SNR_dB)
+    idxNoPeak = setdiff((1:NsamplesPerCodePeriod),delayBinIndex + (-round(Fs/Fc):round(Fs/Fc)));
+    noise_height = mean(results(frequencyBinIndex,idxNoPeak));
+    noise_std    =  std(results(frequencyBinIndex,idxNoPeak));
+    
+%     % (debug only) plot of the correlation pic for the correct frequency bin
+%     figure; hold all;
+%     plot(results(frequencyBinIndex,:));
+%     plot(idxNoPeak,results(frequencyBinIndex,idxNoPeak)); % no peak
+    
+    sqrtSNR_dB = 10*log10( (peak_height - noise_height)/noise_std );
+    fprintf("PRN %02i - estimated sqrt(SNR) = %2.1f dB",prn_v(indPrn),sqrtSNR_dB)
     if acqResults.peakMetric(indPrn) < settings.acqThreshold, fprintf(" (sat not acquired)"); end
     fprintf("\n")
     
@@ -40,5 +48,6 @@ for indPrn = 1:length(prn_v)
     shading interp
     xlabel('Delay (chip)')
     ylabel('Doppler frequency (kHz)')
+    title(sprintf("PRN %02i",prn_v(indPrn)))
 end; clear indPrn
     
