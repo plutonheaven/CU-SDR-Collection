@@ -64,8 +64,12 @@ fclose(fid);
 
 disp ('   Ploting results...');
 if settings.plotAcquisition
-    plotAcquisition(acqResults);
+    plotAcquisition_EnacTP(acqResults,settings);
 %     plotAcquisitionMat(acqResults,settings,settings.acqSatelliteList);
 end
+
+channel = preRun(acqResults, settings);
+showChannelStatus(channel, settings);
+
 disp('Post processing of the signal is over.');
 toc

@@ -51,7 +51,7 @@ end
 
 %If success, then process the data
 if (fid > 0)
-    for indAcq = 1:Nacq;
+    for indAcq = 1:Nacq
        
         
         %% Acquisition ============================================================
@@ -108,8 +108,9 @@ figure;
 bar(settings.acqSatelliteList,sum(detection,2)/Nacq);
 xlabel('PRN')
 ylabel('Detection rate');
-title(settings.fileName);
+title(settings.fileName,'Interpreter','none');
 grid on
+ylim([0 1])
 
 try % works only for simulated signals
     fig = figure;

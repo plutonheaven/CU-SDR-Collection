@@ -40,7 +40,7 @@ for indPrn = 1:length(prn_v)
     
     sqrtSNR_dB = 10*log10( (peak_height - noise_height)/noise_std );
     fprintf("PRN %02i - estimated sqrt(SNR) = %2.1f dB",prn_v(indPrn),sqrtSNR_dB)
-    if acqResults.peakMetric(indPrn) < settings.acqThreshold, fprintf(" (sat not acquired)"); end
+    if acqResults.peakMetric(prn_v(indPrn)) < settings.acqThreshold, fprintf(" (sat not acquired)"); end
     fprintf("\n")
     
     figure(101+indPrn);

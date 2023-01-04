@@ -9,14 +9,14 @@ tic
 prn = 1; % between 1 and 32
 delay_true_chips = 511; % in chips, between 0 and 1022
 doppler_true_Hz = 1500; % in Hz, typ. between +/- 7 kHz
-signal_power_dBm = -150;-140;-130;-160; % in dBm. Typical open sky power is -128.5 dBm
+signal_power_dBm = -130;-140;-150; % in dBm. Typical open sky power is -128.5 dBm
 
 % read settings (mainly to define GPS L1C/A parameters
-settings = initSettings();
+settings = initSettings_EnacTP();
     
 % change signal duration
 %   - max acquisition duration used in Practical Work is 2*11*11 = 242 ms.
-%   - we may want to do 20 of such acquisitions
+%   - we may want to do a few (10) of such acquisitions
 settings.msToProcess = 2500;
 
 % Number of Nav message bits

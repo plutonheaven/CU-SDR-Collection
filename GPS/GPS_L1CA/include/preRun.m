@@ -62,10 +62,15 @@ channel = repmat(channel, 1, settings.numberOfChannels);
 %--- Load information about each satellite --------------------------------
 % Maximum number of initialized channels is number of detected signals, but
 % not more as the number of channels specified in the settings.
-for ii = 1:min([settings.numberOfChannels, sum(acqResults.carrFreq ~= 0)])
+% for ii = 1:min([settings.numberOfChannels, sum(acqResults.carrFreq ~= 0)])
+for ii = 1:min([settings.numberOfChannels, sum(acqResults.peakMetric>settings.acqThreshold)])
     channel(ii).PRN          = PRNindexes(ii);
     channel(ii).acquiredFreq = acqResults.carrFreq(PRNindexes(ii));
     channel(ii).codePhase    = acqResults.codePhase(PRNindexes(ii));
+    
+    %%% ENAC TP Addition %%%
+    channel(ii).freqBin = acqResults.freqBin(PRNindexes(ii));
+    %%%%%%%%%%%%%%%%%%%%%%%%
     
     % Set tracking into mode (there can be more modes if needed e.g. pull-in)
     channel(ii).status       = 'T';
