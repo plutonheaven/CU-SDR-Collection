@@ -58,7 +58,7 @@ for indPeriod = 1:Nperiod
     prnCode_sign = codePeriodSign(indPeriod)*prnCode_1ms;
     
     % introduce delay by circularly shifting the code period by delay
-    prnCode_delay = circshift(prnCode_1ms,delay_true_samples);
+    prnCode_delay = circshift(prnCode_sign,delay_true_samples);
     
     % introduce doppler
     prnCode_doppler = prnCode_delay.*exp(1j*2*pi*(doppler_true_Hz*(0:N_1ms-1)/settings.samplingFreq+phi0));
