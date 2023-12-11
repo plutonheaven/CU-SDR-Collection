@@ -35,6 +35,12 @@ acqLen_ms = 2*(settings.acqNonCohTime*settings.acqCohTime)+2;
 %% Initialization =========================================================
 [fid, message] = fopen(settings.fileName, 'rb');
 
+if fid == -1
+    disp(['Error when opening the file ' settings.fileName])
+    disp('Check that the file has been generated...')
+    return
+end
+
 %Initialize the multiplier to adjust for the data type
 if settings.fileType==1, dataAdaptCoeff=1;
 else,                    dataAdaptCoeff=2;
